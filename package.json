@@ -32,7 +32,7 @@
 "license": "GPL-3.0-or-later",
 "dependencies": {
 "@vitalets/google-translate-api": "^8.0.0",
-"@whiskeysockets/baileys": "github:ds6/bails",
+"@whiskeysockets/baileys": "github:ds6/meta",
 "google-libphonenumber": "latest",
 "@adiwajshing/keyed-db": "^0.2.4",
 "@bochilteam/scraper": "^4.2.4",
