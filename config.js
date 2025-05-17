@@ -21,14 +21,14 @@ global.mods = ['51990841568', '51965911060']
 global.prems = ['51965911060']
 
 
-global.packname = 'ShadowUtra'
-global.botname = '(✦◠‿◠)ShadowBot-MD'
-global.wm = '⏤͟͟͞͞⋆⬪࣪ꥈ☕★ ׄ ꒱ Shadow ୭'
-global.author = 'Edited By Wirk'
-global.dev = '© Powered by Nova Spark Community'
+global.packname = '🩸NASARETH 😈'
+global.botname = '👹🖤Ｈａｒｏｌｄ－Ｂｏｔ－Ｏｆｉｃｉａｌ😈💫'
+global.wm = '⏤͟͟͞͞⋆⬪࣪ꥈ☕★ ׄ ꒱ Harold Ofc ୭'
+global.autor = '𓆩‌۫᷼ ִֶָღܾ݉͢𝐇ꪖR͟ꪮ𝑙ᦔ𓆪‌'
+global.dev = '© Powered by 𓆩‌۫᷼ ִֶָღܾ݉͢𝐇ꪖR͟ꪮ𝑙ᦔ𓆪‌'
 global.errorm = 'Error: ${error.message}'
-global.nombrebot = 'Shadow Bot - MD'
-global.textbot = `「 SHADOW BOT MD 」`
+global.nombrebot = 'Harold Bot - MD'
+global.textbot = `「 HAROLD BOT MD 」`
 global.vs = '3.0.0'
 
 
