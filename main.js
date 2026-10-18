@@ -200,6 +200,18 @@ msgRetryCounterMap, // Determinar si se debe volver a intentar enviar un mensaje
 defaultQueryTimeoutMs: undefined,
 version: version,
 }
+let addNumber
+if (!isRegistered() && (opcion === '2' || methodCode) && !global.botNumberCode) {
+do {
+phoneNumber = await question(chalk.bgBlack(chalk.bold.greenBright(`Por favor, Ingrese el número de WhatsApp.\n${chalk.bold.yellowBright("CONSEJO: Copie el número de WhatsApp y péguelo en la consola.")}\n${chalk.bold.yellowBright("Ejemplo: +51927238856")}\n${chalk.bold.magentaBright('---> ')}`)))
+phoneNumber = phoneNumber.replace(/\D/g,'')
+if (!phoneNumber.startsWith('+')) {
+phoneNumber = `+${phoneNumber}`
+}
+} while (!await isValidPhoneNumber(phoneNumber))
+rl.close()
+addNumber = phoneNumber.replace(/[^0-9]/g, '')
+}
 global.conn = makeWASocket(connectionOptions)
 if (global.conn?.ws) {
 const _ws = global.conn.ws
@@ -212,19 +224,9 @@ if (!isRegistered()) {
 if (opcion === '2' || methodCode) {
 opcion = '2'
 if (!conn.authState.creds.registered) {
-let addNumber
-if (!!phoneNumber) {
+if (!addNumber && !!phoneNumber) {
 addNumber = phoneNumber.replace(/[^0-9]/g, '')
-} else {
-do {
-phoneNumber = await question(chalk.bgBlack(chalk.bold.greenBright(`Por favor, Ingrese el número de WhatsApp.\n${chalk.bold.yellowBright("CONSEJO: Copie el número de WhatsApp y péguelo en la consola.")}\n${chalk.bold.yellowBright("Ejemplo: +51927238856")}\n${chalk.bold.magentaBright('---> ')}`)))
-phoneNumber = phoneNumber.replace(/\D/g,'')
-if (!phoneNumber.startsWith('+')) {
-phoneNumber = `+${phoneNumber}`
 }
-} while (!await isValidPhoneNumber(phoneNumber))
-rl.close()
-addNumber = phoneNumber.replace(/[^0-9]/g, '')
 try {
 await Promise.race([
 conn.waitForSocketOpen(),
@@ -248,7 +250,6 @@ console.log(chalk.bold.white(chalk.bgMagenta('CÓDIGO DE VINCULACIÓN:')), chalk
 console.log(chalk.red('[DEBUG] Error:'), e.message, '| statusCode:', e.output?.statusCode)
 }
 }}}
-}
 
 conn.isInit = false
 conn.well = false
