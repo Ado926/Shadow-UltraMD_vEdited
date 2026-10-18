@@ -230,13 +230,19 @@ conn.ev.on('connection.update', onUpdate)
 setTimeout(() => { conn.ev.off('connection.update', onUpdate); resolve() }, 15000)
 })
 waitForOpen().then(async () => {
-await new Promise(r => setTimeout(r, 1000))
+console.log(chalk.yellow('[DEBUG] WebSocket state:'), conn.ws?.socket?.readyState, '- requesting pairing code...')
+conn.ev.on('connection.update', (u) => {
+if (u.connection) console.log(chalk.yellow('[DEBUG] connection.update:'), u.connection)
+if (u.lastDisconnect) console.log(chalk.yellow('[DEBUG] lastDisconnect:'), JSON.stringify(u.lastDisconnect?.error?.output?.statusCode || u.lastDisconnect?.error?.message))
+})
+await new Promise(r => setTimeout(r, 2000))
+console.log(chalk.yellow('[DEBUG] readyState before request:'), conn.ws?.socket?.readyState)
 try {
 let codeBot = await conn.requestPairingCode(addNumber)
 codeBot = codeBot?.match(/.{1,4}/g)?.join("-") || codeBot
 console.log(chalk.bold.white(chalk.bgMagenta('CÓDIGO DE VINCULACIÓN:')), chalk.bold.white(chalk.white(codeBot)))
 } catch(e) {
-console.log(chalk.red('Error al obtener código:'), e.message)
+console.log(chalk.red('[DEBUG] Error:'), e.message, '| statusCode:', e.output?.statusCode)
 }
 })
 }}}
