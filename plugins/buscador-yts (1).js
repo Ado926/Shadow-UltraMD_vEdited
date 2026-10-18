@@ -3,7 +3,6 @@ import yts from "yt-search";
 import axios from 'axios';
 const { generateWAMessageContent, generateWAMessageFromContent, proto } = (await import('@whiskeysockets/baileys')).default;
 import FormData from "form-data";
-import Jimp from "jimp";
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
     if (!text) return m.reply(`*🔎 ¿Que deseas buscar en YouTube?*`);
