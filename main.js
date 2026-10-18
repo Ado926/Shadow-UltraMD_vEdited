@@ -220,12 +220,13 @@ rl.close()
 addNumber = phoneNumber.replace(/[^0-9]/g, '')
 const waitForOpen = () => new Promise((resolve) => {
 if (conn.ws?.socket?.readyState === 1) return resolve()
-conn.ev.on('connection.update', function onUpdate(update) {
+const onUpdate = (update) => {
 if (update.connection === 'open' || conn.ws?.socket?.readyState === 1) {
 conn.ev.off('connection.update', onUpdate)
 resolve()
 }
-})
+}
+conn.ev.on('connection.update', onUpdate)
 setTimeout(() => { conn.ev.off('connection.update', onUpdate); resolve() }, 15000)
 })
 waitForOpen().then(async () => {
