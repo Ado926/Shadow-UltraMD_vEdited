@@ -201,6 +201,13 @@ defaultQueryTimeoutMs: undefined,
 version: version,
 }
 global.conn = makeWASocket(connectionOptions)
+if (global.conn?.ws) {
+const _ws = global.conn.ws
+_ws.on('open', () => console.log(chalk.cyan('[WS] open')))
+_ws.on('close', (code, reason) => console.log(chalk.cyan('[WS] close'), code, reason?.toString?.() || ''))
+_ws.on('error', (e) => console.log(chalk.cyan('[WS] error'), e?.message || e))
+_ws.on('unexpected-response', (req, res) => console.log(chalk.cyan('[WS] unexpected-response'), res?.statusCode))
+}
 if (!isRegistered()) {
 if (opcion === '2' || methodCode) {
 opcion = '2'
