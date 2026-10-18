@@ -32,10 +32,12 @@ const { chain } = lodash
 const _require = createRequire(import.meta.url)
 const yargs = _require('yargs')
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
-console.log(chalk.yellow('[DEBUG] Llamando protoType/serialize...'))
+console.log(chalk.yellow('[DEBUG] Llamando protoType...'))
 protoType()
+console.log(chalk.yellow('[DEBUG] protoType OK'))
+console.log(chalk.yellow('[DEBUG] Llamando serialize...'))
 serialize()
-console.log(chalk.yellow('[DEBUG] protoType/serialize OK'))
+console.log(chalk.yellow('[DEBUG] serialize OK'))
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {
   return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString();
 }; global.__dirname = function dirname(pathURL) {
