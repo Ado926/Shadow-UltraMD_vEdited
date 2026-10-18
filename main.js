@@ -26,13 +26,16 @@ import pkg from 'google-libphonenumber'
 const { PhoneNumberUtil } = pkg
 const phoneUtil = PhoneNumberUtil.getInstance()
 const {DisconnectReason, useMultiFileAuthState, MessageRetryMap, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC} = await import('@whiskeysockets/baileys')
+console.log(chalk.yellow('[DEBUG] Baileys importado OK'))
 const { CONNECTING } = ws
 const { chain } = lodash
 const _require = createRequire(import.meta.url)
 const yargs = _require('yargs')
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
+console.log(chalk.yellow('[DEBUG] Llamando protoType/serialize...'))
 protoType()
 serialize()
+console.log(chalk.yellow('[DEBUG] protoType/serialize OK'))
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {
   return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString();
 }; global.__dirname = function dirname(pathURL) {
@@ -45,6 +48,7 @@ global.timestamp = { start: new Date }
 const __dirname = global.__dirname(import.meta.url);
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse());
 global.prefix = new RegExp('^[#/.]')
+console.log(chalk.yellow('[DEBUG] Inicializando base de datos...'))
 global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile('media/database/database.json'))
 global.DATABASE = global.db; 
 global.loadDatabase = async function loadDatabase() {
@@ -71,6 +75,7 @@ settings: {},
 global.db.chain = chain(global.db.data);
 };
 loadDatabase();
+console.log(chalk.yellow('[DEBUG] loadDatabase llamado'))
 
 // Inicialización de conexiones globales
 if (global.conns instanceof Array) {
@@ -81,6 +86,7 @@ global.conns = [];
 
 /* ------------------------------------------------*/
 
+console.log(chalk.yellow('[DEBUG] Inicializando chatgpt DB...'))
 global.chatgpt = new Low(new JSONFile(path.join(__dirname, '/db/chatgpt.json')));
 global.loadChatgptDB = async function loadChatgptDB() {
 if (global.chatgpt.READ) {
@@ -102,6 +108,7 @@ users: {},
 global.chatgpt.chain = lodash.chain(global.chatgpt.data);
 };
 loadChatgptDB();
+console.log(chalk.yellow('[DEBUG] loadChatgptDB llamado'))
 
 global.creds = 'creds.json'
 global.authFile = 'ShadowSession'
