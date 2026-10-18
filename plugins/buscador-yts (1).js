@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import yts from "yt-search";
 import axios from 'axios';
-const { generateWAMessageContent, generateWAMessageFromContent, proto } = (await import('@whiskeysockets/baileys')).default;
+const { generateWAMessageContent, generateWAMessageFromContent, proto } = await import('@whiskeysockets/baileys');
 import FormData from "form-data";
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {

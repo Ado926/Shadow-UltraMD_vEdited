@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-const { generateWAMessageContent, generateWAMessageFromContent, proto } = (await import('@whiskeysockets/baileys')).default
+const { generateWAMessageContent, generateWAMessageFromContent, proto } = await import('@whiskeysockets/baileys')
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
 if (!text) return m.reply('*[ ℹ️ ] Ingresa el texto de lo que quieres buscar en Spotify*\n\n*[ 💡 ] Ejemplo:* .spotifysearch Gata Only');
