@@ -269,7 +269,7 @@ const {connection, lastDisconnect, isNewLogin} = update
 global.stopped = connection
 if (isNewLogin) conn.isInit = true
 const code = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode
-if (code && code !== DisconnectReason.loggedOut && conn?.ws.socket == null) {
+if (code && code !== DisconnectReason.loggedOut && code !== DisconnectReason.restartRequired) {
 global.timestamp.connect = new Date
 }
 if (global.db.data == null) loadDatabase()
@@ -282,17 +282,25 @@ console.log(chalk.bold.greenBright(`\n❒⸺⸺⸺⸺【• CONECTADO •】⸺�
 }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode
 if (connection === 'close') {
-let delayMs = 60000
 if (!global._reconnecting) {
+if (reason === DisconnectReason.restartRequired) {
+console.log(chalk.bold.cyanBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄♡\n┆ 🤍 CÓDIGO INGRESADO, CONECTANDO AL SERVIDOR...\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄♡`))
 global._reconnecting = true
-setTimeout(() => { global._reconnecting = false }, delayMs)
-if (reason === DisconnectReason.badSession) {
+await global.reloadHandler(true).catch(console.error)
+global._reconnecting = false
+} else if (reason === DisconnectReason.badSession) {
 console.log(chalk.bold.cyanBright(`⚠️ SIN CONEXIÓN, BORRE LA CARPETA ${global.authFile} Y ESCANEA EL CÓDIGO QR ⚠️`))
 } else if (reason === DisconnectReason.connectionClosed) {
+let delayMs = 60000
+global._reconnecting = true
+setTimeout(() => { global._reconnecting = false }, delayMs)
 console.log(chalk.bold.magentaBright("╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ☹\n┆ ⚠️ CONEXION CERRADA, RECONECTANDO EN 1 MINUTO....\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ☹"))
 await new Promise(r => setTimeout(r, delayMs))
 await global.reloadHandler(true).catch(console.error)
 } else if (reason === DisconnectReason.connectionLost) {
+let delayMs = 60000
+global._reconnecting = true
+setTimeout(() => { global._reconnecting = false }, delayMs)
 console.log(chalk.bold.blueBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ☂\n┆ ⚠️ CONEXIÓN PERDIDA CON EL SERVIDOR, RECONECTANDO EN 1 MINUTO....\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ☂`))
 await new Promise(r => setTimeout(r, delayMs))
 await global.reloadHandler(true).catch(console.error)
@@ -300,11 +308,10 @@ await global.reloadHandler(true).catch(console.error)
 console.log(chalk.bold.yellowBright("╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✗\n┆ ⚠️ CONEXIÓN REEMPLAZADA, SE HA ABIERTO OTRA NUEVA SESION, POR FAVOR, CIERRA LA SESIÓN ACTUAL PRIMERO.\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✗"))
 } else if (reason === DisconnectReason.loggedOut) {
 console.log(chalk.bold.redBright(`\n⚠️ SIN CONEXIÓN, BORRE LA CARPETA ${global.authFile} Y ESCANEA EL CÓDIGO QR ⚠️`))
-} else if (reason === DisconnectReason.restartRequired) {
-console.log(chalk.bold.cyanBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄♡\n┆ 🤍 CONECTANDO AL SERVIDOR EN 1 MINUTO...\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄♡`))
-await new Promise(r => setTimeout(r, delayMs))
-await global.reloadHandler(true).catch(console.error)
 } else if (reason === DisconnectReason.timedOut) {
+let delayMs = 60000
+global._reconnecting = true
+setTimeout(() => { global._reconnecting = false }, delayMs)
 console.log(chalk.bold.yellowBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ▸\n┆ ⌛ TIEMPO DE CONEXIÓN AGOTADO, RECONECTANDO EN 1 MINUTO....\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ▸`))
 await new Promise(r => setTimeout(r, delayMs))
 await global.reloadHandler(true).catch(console.error)
