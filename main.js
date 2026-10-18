@@ -113,19 +113,25 @@ if (!fs.existsSync(rutaJadiBot)) {
 fs.mkdirSync(rutaJadiBot)
 }
 */
+console.log(chalk.yellow('[DEBUG] Cargando auth state...'))
 const {state, saveState, saveCreds} = await useMultiFileAuthState(global.authFile)
+console.log(chalk.yellow('[DEBUG] Auth state cargado'))
 const msgRetryCounterMap = (MessageRetryMap) => { }
 const msgRetryCounterCache = new NodeCache()
+console.log(chalk.yellow('[DEBUG] Obteniendo versión de Baileys...'))
 const {version} = await fetchLatestBaileysVersion()
+console.log(chalk.yellow('[DEBUG] Versión obtenida:'), version)
 let phoneNumber = global.botNumberCode
 const methodCodeQR = process.argv.includes("qr")
 const methodCode = !!phoneNumber || process.argv.includes("code")
 const MethodMobile = process.argv.includes("mobile")
+console.log(chalk.yellow('[DEBUG] Creando readline...'))
 let rl = readline.createInterface({
 input: process.stdin,
 output: process.stdout,
 terminal: true,
 })
+console.log(chalk.yellow('[DEBUG] Readline creado'))
 
 const question = (texto) => {
 rl.clearLine(rl.input, 0)
@@ -145,7 +151,9 @@ return fs.existsSync(`./${authFile}/creds.json`) && JSON.parse(fs.readFileSync(`
 if (methodCodeQR) {
 opcion = '1'
 }
+console.log(chalk.yellow('[DEBUG] methodCodeQR:'), methodCodeQR, chalk.yellow('methodCode:'), methodCode, chalk.yellow('isRegistered:'), isRegistered())
 if (!methodCodeQR && !methodCode && !isRegistered()) {
+console.log(chalk.yellow('[DEBUG] Mostrando menú de vinculación...'))
 do {
 let lineM = '┄╴───┈┈┈┈──┈┈┈┈───┈╴'
 opcion = await question(`╭${lineM}  
@@ -200,7 +208,10 @@ msgRetryCounterMap, // Determinar si se debe volver a intentar enviar un mensaje
 defaultQueryTimeoutMs: undefined,
 version: [2, 3000, 1015901307],
 }
+console.log(chalk.yellow('[DEBUG] Menú completado, opcion:'), opcion)
+console.log(chalk.yellow('[DEBUG] Iniciando makeWASocket...'))
 global.conn = makeWASocket(connectionOptions)
+console.log(chalk.yellow('[DEBUG] makeWASocket creado'))
 if (!isRegistered()) {
 if (opcion === '2' || methodCode) {
 opcion = '2'
