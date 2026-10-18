@@ -23,7 +23,7 @@ let handler = async (m, { conn, usedPrefix, text, args, command }) => {
         contextInfo: {
             externalAdReply: {
                 showAdAttribution: true,
-                title: 'һ᥆ᥣᥲ :D,
+                title: 'һ᥆ᥣᥲ :D',
                 body: dev,
                 thumbnailUrl: 'https://files.catbox.moe/8an9fs.jpg',
                 sourceUrl: 'https://wa.me/50493732693?text=Vengo+Del+Comando+.owner',
