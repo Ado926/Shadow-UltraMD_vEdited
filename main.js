@@ -218,25 +218,21 @@ phoneNumber = `+${phoneNumber}`
 } while (!await isValidPhoneNumber(phoneNumber))
 rl.close()
 addNumber = phoneNumber.replace(/[^0-9]/g, '')
-const waitForOpen = () => new Promise((resolve) => {
-if (conn.ws?.socket?.readyState === 1) return resolve()
-const onUpdate = (update) => {
-if (update.connection === 'open' || conn.ws?.socket?.readyState === 1) {
-conn.ev.off('connection.update', onUpdate)
-resolve()
+try {
+await Promise.race([
+conn.waitForSocketOpen(),
+new Promise((_, rej) => setTimeout(() => rej(new Error('Timeout abriendo WebSocket')), 20000))
+])
+} catch(e) {
+console.log(chalk.red('[DEBUG] No se pudo abrir el WebSocket:'), e.message)
 }
-}
-conn.ev.on('connection.update', onUpdate)
-setTimeout(() => { conn.ev.off('connection.update', onUpdate); resolve() }, 15000)
-})
-waitForOpen().then(async () => {
-console.log(chalk.yellow('[DEBUG] WebSocket state:'), conn.ws?.socket?.readyState, '- requesting pairing code...')
+console.log(chalk.yellow('[DEBUG] ws.isOpen:'), conn.ws?.isOpen, '- requesting pairing code...')
 conn.ev.on('connection.update', (u) => {
 if (u.connection) console.log(chalk.yellow('[DEBUG] connection.update:'), u.connection)
 if (u.lastDisconnect) console.log(chalk.yellow('[DEBUG] lastDisconnect:'), JSON.stringify(u.lastDisconnect?.error?.output?.statusCode || u.lastDisconnect?.error?.message))
 })
-await new Promise(r => setTimeout(r, 2000))
-console.log(chalk.yellow('[DEBUG] readyState before request:'), conn.ws?.socket?.readyState)
+await new Promise(r => setTimeout(r, 1500))
+console.log(chalk.yellow('[DEBUG] ws.isOpen before request:'), conn.ws?.isOpen)
 try {
 let codeBot = await conn.requestPairingCode(addNumber)
 codeBot = codeBot?.match(/.{1,4}/g)?.join("-") || codeBot
@@ -244,7 +240,6 @@ console.log(chalk.bold.white(chalk.bgMagenta('CÓDIGO DE VINCULACIÓN:')), chalk
 } catch(e) {
 console.log(chalk.red('[DEBUG] Error:'), e.message, '| statusCode:', e.output?.statusCode)
 }
-})
 }}}
 }
 
