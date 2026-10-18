@@ -217,12 +217,27 @@ phoneNumber = `+${phoneNumber}`
 }
 } while (!await isValidPhoneNumber(phoneNumber))
 rl.close()
-addNumber = phoneNumber.replace(/\D/g, '')
-setTimeout(async () => {
+addNumber = phoneNumber.replace(/[^0-9]/g, '')
+const waitForOpen = () => new Promise((resolve) => {
+if (conn.ws?.socket?.readyState === 1) return resolve()
+conn.ev.on('connection.update', function onUpdate(update) {
+if (update.connection === 'open' || conn.ws?.socket?.readyState === 1) {
+conn.ev.off('connection.update', onUpdate)
+resolve()
+}
+})
+setTimeout(() => { conn.ev.off('connection.update', onUpdate); resolve() }, 15000)
+})
+waitForOpen().then(async () => {
+await new Promise(r => setTimeout(r, 1000))
+try {
 let codeBot = await conn.requestPairingCode(addNumber)
 codeBot = codeBot?.match(/.{1,4}/g)?.join("-") || codeBot
 console.log(chalk.bold.white(chalk.bgMagenta('CÓDIGO DE VINCULACIÓN:')), chalk.bold.white(chalk.white(codeBot)))
-}, 2000)
+} catch(e) {
+console.log(chalk.red('Error al obtener código:'), e.message)
+}
+})
 }}}
 }
 
