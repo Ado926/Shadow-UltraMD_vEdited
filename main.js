@@ -137,10 +137,15 @@ resolver(respuesta.trim())
 }
 
 let opcion
+const isRegistered = () => {
+try {
+return fs.existsSync(`./${authFile}/creds.json`) && JSON.parse(fs.readFileSync(`./${authFile}/creds.json`, 'utf-8')).registered === true
+} catch { return false }
+}
 if (methodCodeQR) {
 opcion = '1'
 }
-if (!methodCodeQR && !methodCode && !fs.existsSync(`./${authFile}/creds.json`)) {
+if (!methodCodeQR && !methodCode && !isRegistered()) {
 do {
 let lineM = '┄╴───┈┈┈┈──┈┈┈┈───┈╴'
 opcion = await question(`╭${lineM}  
@@ -159,7 +164,7 @@ opcion = await question(`╭${lineM}
 ╰${lineM}\n${chalk.bold.magentaBright('---> ')}`)
 if (!/^[1-2]$/.test(opcion)) {
 console.log(chalk.bold.redBright(`NO SE PERMITE NÚMEROS QUE NO SEAN ${chalk.bold.greenBright("1")} O ${chalk.bold.greenBright("2")}, TAMPOCO LETRAS O SÍMBOLOS ESPECIALES.\n${chalk.bold.yellowBright("CONSEJO: COPIE EL NÚMERO DE LA OPCIÓN Y PÉGUELO EN LA CONSOLA.")}`))
-}} while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${authFile}/creds.json`))
+}} while (opcion !== '1' && opcion !== '2' || isRegistered())
 }
 
 const filterStrings = [
@@ -196,7 +201,7 @@ defaultQueryTimeoutMs: undefined,
 version: [2, 3000, 1015901307],
 }
 global.conn = makeWASocket(connectionOptions)
-if (!fs.existsSync(`./${authFile}/creds.json`)) {
+if (!isRegistered()) {
 if (opcion === '2' || methodCode) {
 opcion = '2'
 if (!conn.authState.creds.registered) {
