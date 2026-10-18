@@ -6,7 +6,6 @@ import {fileURLToPath, pathToFileURL} from 'url'
 import { platform } from 'process'
 import * as ws from 'ws'
 import fs, { watchFile, unwatchFile, writeFileSync, readdirSync, statSync, unlinkSync, existsSync, readFileSync, copyFileSync, watch, rmSync, readdir, stat, mkdirSync, rename, writeFile } from 'fs'
-import yargs from 'yargs'
 import { spawn } from 'child_process'
 import lodash from 'lodash'
 import chalk from 'chalk'
@@ -29,6 +28,8 @@ const phoneUtil = PhoneNumberUtil.getInstance()
 const {DisconnectReason, useMultiFileAuthState, MessageRetryMap, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC} = await import('@whiskeysockets/baileys')
 const { CONNECTING } = ws
 const { chain } = lodash
+const _require = createRequire(import.meta.url)
+const yargs = _require('yargs')
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 protoType()
 serialize()

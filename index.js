@@ -5,13 +5,13 @@ import { setupMaster, fork } from 'cluster';
 import { watchFile, unwatchFile } from 'fs';
 import cfonts from 'cfonts';
 import { createInterface } from 'readline';
-import yargs from 'yargs';
 import chalk from 'chalk';
 
 console.log('\nIniciando Sistema...');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
+const yargs = require('yargs');
 const { name, description, author, version } = require(join(__dirname, './package.json'));
 
 const { say } = cfonts;
