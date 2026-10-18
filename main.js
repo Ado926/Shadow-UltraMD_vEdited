@@ -36,8 +36,12 @@ console.log(chalk.yellow('[DEBUG] Llamando protoType...'))
 protoType()
 console.log(chalk.yellow('[DEBUG] protoType OK'))
 console.log(chalk.yellow('[DEBUG] Llamando serialize...'))
+try {
 serialize()
 console.log(chalk.yellow('[DEBUG] serialize OK'))
+} catch(e) {
+console.log(chalk.red('[DEBUG] serialize ERROR:'), e.message)
+}
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {
   return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString();
 }; global.__dirname = function dirname(pathURL) {
